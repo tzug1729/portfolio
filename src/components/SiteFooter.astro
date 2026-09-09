@@ -1,0 +1,75 @@
+---
+import Icon from './Icon.astro';
+import Window from './Window.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import { site } from '../site.config';
+
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+
+const externals = [
+  { name: 'github', href: site.github, label: t('footer.github') },
+  { name: 'qiita', href: site.qiita, label: t('footer.qiita') },
+] as const;
+---
+
+<footer class="site-footer">
+  <Window size="s">
+    <div class="site-footer__row">
+      <ul class="site-footer__links" aria-label={t('a11y.externalLinks')}>
+        {
+          externals.map((link) => (
+            <li>
+              <a
+                class="site-footer__link"
+                href={link.href}
+                aria-label={link.label}
+                target="_blank"
+                rel="noopener noreferrer me"
+              >
+                <Icon name={link.name} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <small class="site-footer__copy">© {year} {site.name}</small>
+    </div>
+  </Window>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-hero);
+  }
+
+  .site-footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .site-footer__links {
+    display: flex;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .site-footer__link {
+    display: inline-flex;
+    padding: 0.35rem;
+    border-radius: 3px;
+    color: var(--gold);
+  }
+
+  .site-footer__copy {
+    font-size: var(--fs-meta);
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+</style>

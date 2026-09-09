@@ -1,0 +1,75 @@
+---
+/**
+ * 金の二重枠の紺ウィンドウ。このサイトで唯一の主題。
+ * 装飾のバリエーションは増やさず、size で大きさと内側の密度だけを変える。
+ *
+ *   l … 1画面に1つだけ置く主役
+ *   m … 主役を支える従
+ *   s … ヘッダー・フッター・メタ情報などの断片
+ *
+ * 注意: 親の scoped CSS はこのコンポーネントの根要素まで届かない
+ * （根が動的タグのため親の data-astro-cid が付かない）。
+ * 外側の余白や幅を効かせたいときは、呼び出し側で素の要素に包むこと。
+ */
+type Size = 'l' | 'm' | 's';
+
+interface Props {
+  size?: Size;
+  /** 出力するタグ。section / header / footer などランドマークにも使う */
+  as?: string;
+  id?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+}
+
+const {
+  size = 'm',
+  as: Tag = 'div',
+  id,
+  'aria-label': ariaLabel,
+  'aria-labelledby': ariaLabelledby,
+} = Astro.props;
+---
+
+<Tag
+  class:list={['window', `window--${size}`]}
+  id={id}
+  aria-label={ariaLabel}
+  aria-labelledby={ariaLabelledby}
+>
+  <div class="window__inner"><slot /></div>
+</Tag>
+
+<style>
+  /* 外枠 1px → 3px の間 → 内枠 1px。影は落とさない */
+  /* ウィンドウの中は配色スキームに関係なく紺地。
+     役割トークンをここで塗り直すので、中身は明暗を意識しなくてよい */
+  .window {
+    --ink: var(--paper);
+    --ink-muted: var(--muted);
+
+    background-color: var(--window);
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-outer);
+    padding: var(--frame-gap);
+    color: var(--ink);
+  }
+
+  .window__inner {
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-inner);
+  }
+
+  .window--l .window__inner {
+    padding: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
+  .window--m .window__inner {
+    padding: 1.125rem 1.25rem;
+  }
+
+  .window--s .window__inner {
+    padding: 0.5rem 0.75rem;
+    line-height: 1.6;
+  }
+</style>

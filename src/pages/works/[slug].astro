@@ -1,0 +1,18 @@
+---
+import WorkDetail from '../../components/WorkDetail.astro';
+import Base from '../../layouts/Base.astro';
+import { getWorks, type LocalizedWork } from '../../lib/content';
+
+export async function getStaticPaths() {
+  const works = await getWorks('ja');
+  return works.map((work) => ({ params: { slug: work.entry.data.slug }, props: work }));
+}
+
+type Props = LocalizedWork;
+
+const { entry, fallback } = Astro.props;
+---
+
+<Base title={entry.data.title} ogType="article">
+  <WorkDetail entry={entry} fallback={fallback} />
+</Base>

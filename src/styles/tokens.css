@@ -1,0 +1,61 @@
+/* ------------------------------------------------------------------
+   デザイントークン
+   色は依頼書の8色 + --page-bg / --ink（ウィンドウ外の地と文字）のみ。
+   ------------------------------------------------------------------ */
+:root {
+  /* 主題の色 */
+  --window: #10203f; /* ウィンドウ地 */
+  --gold: #d9b45b; /* 縁 */
+  --gold-bright: #e0c066; /* 見出し・強調 */
+  --paper: #f7f3e8; /* 本文 */
+  --muted: #c9bfa3; /* 補助情報 */
+  --bg-dark: #0c1526; /* ページ地（既定） */
+  --bg-light: #f2ebdb; /* ページ地（ライト時） */
+  --accent-red: #b4472f; /* 注意・現在地 */
+
+  /* ページ地と「ウィンドウの外」に置く文字。ライト時だけ差し替える。
+     ウィンドウの中は常に紺地なので Window.astro が同じ2つを塗り直す。
+
+     不変条件: 見出しとリンクは必ずウィンドウの中に置く。
+     常に紺地の上に乗るので、金は配色スキームによらずそのまま使える。 */
+  --page-bg: var(--bg-dark);
+  --ink: var(--paper); /*       本文 */
+  --ink-muted: var(--muted); /* 補助情報 */
+
+  /* タイプスケール */
+  --fs-display: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem); /* 28 - 40px */
+  --fs-h1: clamp(1.375rem, 1.1rem + 1.1vw, 1.75rem); /*     22 - 28px */
+  --fs-h2: 1.125rem; /*                                          18px */
+  --fs-body: 1rem; /*                                            16px */
+  --fs-small: 0.8125rem; /*                                      13px */
+  --fs-meta: 0.75rem; /*                                         12px */
+
+  /* 縦のリズム。主役の前後だけ大きく空ける */
+  --space-hero: clamp(4rem, 10vw, 6rem);
+  --space-section: 3rem;
+  --space-item: 1.75rem;
+  --space-tight: 0.75rem;
+
+  /* 本文カラム（日本語で1行40字前後） */
+  --measure: 40rem;
+
+  /* リンク先頭の ▶ をぶら下げる溝。行頭を揃えるときは同じ量を打ち消す */
+  --marker-gutter: 1.65em;
+
+  /* 隣り合うウィンドウの金線が接触しないための下限 */
+  --space-window-min: 1rem;
+
+  /* 枠 */
+  --radius-outer: 8px;
+  --radius-inner: 6px;
+  --frame-gap: 3px;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --page-bg: var(--bg-light);
+    /* 生成りの地の上で読める濃度に落とす。金そのままだと本文が読めない */
+    --ink: #2a2418;
+    --ink-muted: #6b6252;
+  }
+}

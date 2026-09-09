@@ -1,0 +1,64 @@
+---
+import { parsePath, useTranslations } from '../i18n/ui';
+import type { WorkEntry } from '../lib/content';
+
+/** 期間・体制・技術タグ。枠は付けず、一覧の行と同じ muted テキストで揃える */
+interface Props {
+  entry: WorkEntry;
+}
+
+const { entry } = Astro.props;
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+const { period, role, responsibility, tech } = entry.data;
+---
+
+<div class="workmeta">
+  <p class="workmeta__line">
+    <span>{period}</span>
+    <span class="workmeta__sep" aria-hidden="true">・</span>
+    <span>{t(`works.${role}`)}</span>
+  </p>
+
+  <p class="workmeta__line">{tech.join(' / ')}</p>
+
+  {
+    responsibility && (
+      <p class="workmeta__resp">
+        <span class="workmeta__label">{t('works.responsibility')}</span>
+        {responsibility}
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .workmeta {
+    margin-top: 0.6rem;
+  }
+
+  .workmeta__line {
+    max-width: var(--measure);
+    font-size: var(--fs-meta);
+    line-height: 1.8;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .workmeta__sep {
+    margin: 0 0.4em;
+  }
+
+  .workmeta__resp {
+    margin-top: 0.35rem;
+    max-width: var(--measure);
+    font-size: var(--fs-small);
+    line-height: 1.8;
+    color: var(--ink);
+  }
+
+  .workmeta__label {
+    margin-right: 0.75em;
+    color: var(--ink-muted);
+  }
+</style>

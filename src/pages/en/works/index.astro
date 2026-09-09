@@ -1,0 +1,12 @@
+---
+import WorksList from '../../../components/WorksList.astro';
+import Base from '../../../layouts/Base.astro';
+import { parsePath, useTranslations } from '../../../i18n/ui';
+
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+---
+
+<Base title={t('works.title')}>
+  <WorksList />
+</Base>

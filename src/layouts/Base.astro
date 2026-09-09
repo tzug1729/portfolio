@@ -1,0 +1,62 @@
+---
+import { getAbsoluteLocaleUrl } from 'astro:i18n';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { defaultLocale, htmlLang, locales, ogLocale, parsePath, useTranslations, withBase } from '../i18n/ui';
+import { site } from '../site.config';
+import '../styles/tokens.css';
+import '../styles/base.css';
+
+interface Props {
+  /** ページ見出し。トップは省略して名義だけを <title> にする */
+  title?: string;
+  description?: string;
+  ogType?: 'website' | 'article';
+}
+
+const { title, description, ogType = 'website' } = Astro.props;
+const { locale, path } = parsePath(Astro.url);
+const t = useTranslations(locale);
+
+const pageTitle = title ? `${title} | ${site.name}` : site.name;
+const pageDescription = description ?? t('site.description');
+const canonical = getAbsoluteLocaleUrl(locale, path);
+---
+
+<!doctype html>
+<html lang={htmlLang[locale]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href={withBase('favicon.svg')} type="image/svg+xml" />
+
+    {/* 対応言語版の相互リンク */}
+    {locales.map((code) => <link rel="alternate" hreflang={code} href={getAbsoluteLocaleUrl(code, path)} />)}
+    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLocale, path)} />
+
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={ogLocale[locale]} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t('a11y.skipToContent')}</a>
+    <div class="shell">
+      <SiteHeader />
+      <main id="main">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

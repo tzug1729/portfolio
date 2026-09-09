@@ -1,0 +1,62 @@
+---
+/**
+ * 自作の金線アイコン。既存サービスのロゴ書体・マークは使わない。
+ * 装飾なのでここでは aria-hidden にし、ラベルは親のリンクが持つ。
+ */
+interface Props {
+  name: 'github' | 'qiita';
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 22, class: className } = Astro.props;
+---
+
+<svg
+  class:list={['icon', className]}
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.25"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    name === 'github' && (
+      <g>
+        {/* コミットグラフ: 縦の幹から枝が1本出る */}
+        <circle cx="7" cy="5.5" r="2.5" />
+        <circle cx="7" cy="18.5" r="2.5" />
+        <circle cx="17" cy="12" r="2.5" />
+        <path d="M7 8v8" />
+        <path d="M7 15.5c0-2.5 2-3.5 4.5-3.5H14.5" />
+      </g>
+    )
+  }
+  {
+    name === 'qiita' && (
+      <g>
+        {/* 環と尾で組んだ Q */}
+        <circle cx="11.5" cy="11" r="6.5" />
+        <path d="M13.2 12.6 18.5 18.5" />
+      </g>
+    )
+  }
+</svg>
+
+<style>
+  .icon {
+    display: block;
+    color: var(--gold);
+    transition: color 120ms linear;
+  }
+
+  a:hover .icon,
+  a:focus-visible .icon {
+    color: var(--gold-bright);
+  }
+</style>

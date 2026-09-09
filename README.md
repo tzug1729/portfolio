@@ -1,62 +1,49 @@
-[Read in English](README.en.md)
-# HRのポートフォリオ
+# tzug — portfolio
 
-多言語対応（日本語/英語）のレスポンシブポートフォリオサイト。HTML/CSS/JavaScriptのみで構成されたシンプルで拡張性の高い個人プロジェクト紹介サイトです。
+個人ポートフォリオサイト。Astro + 素の CSS、依存は `astro` のみ。
 
-🌐 **Live Demo:** [https://hr0620.github.io/portfolio/index/index.html](https://hr0620.github.io/portfolio/index/index.html)
+公開先: <https://tzug1729.github.io/portfolio/>
 
-## 特徴
+## 開発
 
-- 📱 **レスポンシブデザイン** - モバイル/タブレット/デスクトップに対応
-- 🌍 **多言語対応** - 日本語と英語の言語切り替え機能
-- 🎨 **ダーク/ライトテーマ** - 目にやさしいテーマ切り替え機能
-- ✨ **テック系デザイン** - グロー効果やアニメーションを取り入れたモダンなUI
-- ♿ **アクセシブル** - セマンティックHTMLとARIA属性に対応
+```sh
+npm install
+npm run dev      # http://localhost:4321/portfolio/
+npm run build    # dist/ に出力
+npm run preview
+```
+
+`base` パスと `site` は環境変数で差し替えられる。
+
+```sh
+BASE_PATH=/ SITE_URL=https://example.com npm run build
+```
 
 ## 構成
 
 ```
-portfolio/
-├── index/
-│   ├── index.html          # メインHTMLファイル
-│   ├── css/
-│   │   ├── themes.css      # テーマカラー定義
-│   │   ├── style.css       # 基本レイアウト
-│   │   ├── ui.css          # Header, Menu, Modal
-│   │   ├── timeline.css    # タイムライン
-│   │   ├── cards.css       # カードコンポーネント
-│   │   └── carousel.css    # 資格カルーセル
-│   ├── js/
-│   │   ├── main.js         # メインロジック
-│   │   ├── config.js       # データ設定
-│   │   ├── i18n.js         # 多言語対応
-│   │   ├── theme.js        # テーマ制御
-│   │   ├── timeline.js     # タイムライン機能
-│   │   ├── certifications.js # 資格カルーセル
-│   │   ├── projects.js     # プロジェクト表示
-│   │   ├── skills.js       # スキル表示
-│   │   └── ...             # その他モジュール
-│   └── assets/             # 画像等のアセット
-├── projects/               # プロジェクト詳細ページ
-│   ├── class/              # 授業関連プロジェクト
-│   └── kosen-fes/          # 高専祭プロジェクト
-├── README.md               # このファイル
-├── README.en.md            # 英語版README
-└── License                 # MITライセンス
+src/
+  components/   Window（金の二重枠）と、それを組んだ部品
+  layouts/      Base.astro … <html lang> / hreflang / OGP
+  i18n/         ja.json en.json ui.ts … UI 文言のみ
+  content/
+    works/ja/*.md   作品。本文と4つの見出しは Markdown 本体が持つ
+    works/en/*.md   未作成の記事は日本語版に自動でフォールバックする
+    about/ja/*.md   プロフィールの各節
+  pages/        日本語は直下、英語は en/ 配下
+  styles/       tokens.css（色・字寸・余白）/ base.css
+kosen-fes/      高専祭の旧サイト。ビルド対象外の保管物
+class/          授業課題の旧サイト。ビルド対象外の保管物
 ```
 
-## 使用技術
+## 書くときの約束
 
-- **HTML5** - セマンティックマークアップ
-- **CSS3** - グリッドレイアウト、カスタムプロパティ、アニメーション
-- **Vanilla JavaScript** - フレームワーク不要
-- **Font Awesome** - アイコン
-- **Prism.js** - コードシンタックスハイライト
+- 見出しとリンクは必ずウィンドウの中に置く。常に紺地の上に乗るので金がそのまま使える
+- `font-weight` に太字を書かない。階層はサイズ・色・字間でつける
+- `role: team` の作品は `responsibility` が必須。空だとビルドが落ちる
+- 本文が未定の箇所は `TODO: 本文` のままにする
 
-## License
+## デプロイ
 
-詳細は [License](./License) ファイルを参照してください。
-
-## Author
-
-**原田 連寿** (Renju Harada)
+`main` への push で `.github/workflows/deploy.yml` が動く。
+リポジトリの Settings → Pages で Source を **GitHub Actions** にしておくこと。

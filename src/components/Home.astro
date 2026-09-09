@@ -1,0 +1,60 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import NavLink from './NavLink.astro';
+import Window from './Window.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import { site } from '../site.config';
+
+/** トップは主役のウィンドウ1枚だけ。他に何も置かない */
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+---
+
+<section class="home">
+  <div class="home__frame">
+    <Window size="l">
+      <h1 class="home__name">{site.name}</h1>
+      <p class="home__tagline">{t('home.tagline')}</p>
+      <p class="home__cta">
+        <NavLink href={getRelativeLocaleUrl(locale, 'works')}>{t('home.toWorks')}</NavLink>
+      </p>
+    </Window>
+  </div>
+</section>
+
+<style>
+  .home {
+    display: flex;
+    align-items: center;
+    min-height: min(58vh, 30rem);
+    padding-block: var(--space-hero);
+  }
+
+  .home__frame {
+    width: 100%;
+    max-width: 34rem;
+  }
+
+  .home__name {
+    font-size: var(--fs-display);
+    letter-spacing: 0.12em;
+  }
+
+  .home__tagline {
+    margin-top: 0.75rem;
+    max-width: var(--measure);
+    color: var(--ink);
+  }
+
+  .home__cta {
+    margin-top: var(--space-item);
+    margin-left: calc(var(--marker-gutter) * -1);
+  }
+
+  @media (max-width: 30rem) {
+    .home {
+      min-height: 0;
+      padding-block: var(--space-section);
+    }
+  }
+</style>

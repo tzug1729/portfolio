@@ -1,0 +1,76 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { locales, parsePath, useTranslations } from '../i18n/ui';
+
+/**
+ * ▶ JA / EN の2択。ドロップダウンにしない。
+ * path はロケール接頭辞を除いたものなので、切り替えても同じページに留まる。
+ */
+const { locale, path } = parsePath(Astro.url);
+const t = useTranslations(locale);
+---
+
+<nav class="lang" aria-label={t('a11y.langSwitch')}>
+  {
+    locales.map((code, index) => (
+      <>
+        {index > 0 && <span class="lang__sep" aria-hidden="true">/</span>}
+        <a
+          href={getRelativeLocaleUrl(code, path)}
+          class:list={['lang__link', { 'lang__link--current': code === locale }]}
+          lang={code}
+          hreflang={code}
+          aria-current={code === locale ? 'true' : undefined}
+        >
+          <span class="lang__marker" aria-hidden="true">▶</span>{t(`lang.${code}`)}
+        </a>
+      </>
+    ))
+  }
+</nav>
+
+<style>
+  .lang {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.15em;
+    font-size: var(--fs-small);
+    letter-spacing: 0.06em;
+  }
+
+  .lang__sep {
+    color: var(--ink-muted);
+  }
+
+  .lang__link {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+    padding: 0.1em 0.35em;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 120ms linear;
+  }
+
+  .lang__marker {
+    opacity: 0;
+    color: var(--gold-bright);
+    transition: opacity 120ms linear;
+  }
+
+  .lang__link:hover,
+  .lang__link:focus-visible {
+    color: var(--gold-bright);
+  }
+
+  .lang__link:hover .lang__marker,
+  .lang__link:focus-visible .lang__marker,
+  .lang__link--current .lang__marker {
+    opacity: 1;
+  }
+
+  /* 現在の言語は地色ではなく文字色で示す */
+  .lang__link--current {
+    color: var(--gold-bright);
+  }
+</style>

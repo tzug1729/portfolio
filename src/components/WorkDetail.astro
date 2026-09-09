@@ -1,0 +1,117 @@
+---
+import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import NavLink from './NavLink.astro';
+import Prose from './Prose.astro';
+import Window from './Window.astro';
+import WorkMeta from './WorkMeta.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import type { LocalizedWork } from '../lib/content';
+
+type Props = LocalizedWork;
+
+const { entry, fallback } = Astro.props;
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+const { Content } = await render(entry);
+
+const { links } = entry.data;
+const external = [
+  links.github ? { key: 'linkGithub', href: links.github } : null,
+  links.demo ? { key: 'linkDemo', href: links.demo } : null,
+  links.article ? { key: 'linkArticle', href: links.article } : null,
+].filter((link): link is { key: string; href: string } => link !== null);
+---
+
+<article class="work">
+  {/* 主役。見出し・メタ・本文をひとつの窓に収める。幅はヘッダー・フッターと同じ */}
+  <Window size="l">
+    <header class="work__head">
+      <h1>{entry.data.title}</h1>
+      <WorkMeta entry={entry} />
+      {
+        fallback && (
+          <p class="work__fallback">
+            <span lang="en">{t('works.japaneseOnly')}</span>
+          </p>
+        )
+      }
+    </header>
+
+    <Prose><Content /></Prose>
+
+    {
+      external.length > 0 && (
+        <nav class="work__links" aria-label={t('works.links')}>
+          {external.map((link) => (
+            <NavLink href={link.href} external>
+              {t(`works.${link.key}`)}
+            </NavLink>
+          ))}
+        </nav>
+      )
+    }
+  </Window>
+
+  <div class="work__aside">
+    <Window size="m">
+      <h2 class="work__asideTitle">{t('works.constraints')}</h2>
+      <p class="work__asideText">{entry.data.constraints}</p>
+    </Window>
+  </div>
+
+  <div class="work__back">
+    <Window size="s">
+      <NavLink href={getRelativeLocaleUrl(locale, 'works')} variant="menu">{t('works.back')}</NavLink>
+    </Window>
+  </div>
+</article>
+
+<style>
+  .work__head {
+    margin-bottom: var(--space-item);
+  }
+
+  /* 未翻訳の目印。枠を付けず1行で置く */
+  .work__fallback {
+    margin-top: 0.6rem;
+    font-size: var(--fs-small);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .work__aside {
+    margin-top: max(var(--space-window-min), var(--space-section));
+    max-width: 34rem;
+  }
+
+  .work__asideTitle {
+    font-size: var(--fs-small);
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+  }
+
+  .work__asideText {
+    margin-top: 0.35rem;
+    max-width: var(--measure);
+  }
+
+  /* 本文の続き。作品そのものへの導線 */
+  .work__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: var(--space-section);
+    margin-left: calc(var(--marker-gutter) * -1);
+    font-size: var(--fs-small);
+  }
+
+  /* ページ末尾で唯一の導線。窓に入れて金のまま読ませる */
+  .work__back {
+    width: fit-content;
+    margin-top: max(var(--space-window-min), var(--space-section));
+    font-size: var(--fs-small);
+  }
+
+</style>

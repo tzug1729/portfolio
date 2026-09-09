@@ -1,0 +1,87 @@
+---
+/** Markdown 本文の見た目。見出しは本文側（.md）が持つ */
+/* class は受け取らない。親の scoped CSS はここまで届かないので、
+   外側の余白や幅を効かせたいときは呼び出し側で素の要素に包むこと。 */
+interface Props {
+  /** small: 資格など、末尾で密度を落とす箇所 */
+  size?: 'default' | 'small';
+}
+
+const { size = 'default' } = Astro.props;
+---
+
+<div class:list={['prose', `prose--${size}`]}><slot /></div>
+
+<style>
+  .prose :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  .prose :global(h2) {
+    margin-top: 2.25rem;
+    font-size: var(--fs-h2);
+  }
+
+  .prose :global(h3) {
+    margin-top: 1.5rem;
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) {
+    margin-top: 0.9rem;
+    max-width: var(--measure);
+  }
+
+  .prose :global(li + li) {
+    margin-top: 0.25rem;
+  }
+
+  .prose :global(a) {
+    color: var(--gold-bright);
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose :global(img) {
+    display: block;
+    margin-top: 1.25rem;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-inner);
+  }
+
+  .prose :global(figcaption) {
+    margin-top: 0.4rem;
+    font-size: var(--fs-small);
+    color: var(--ink-muted);
+  }
+
+  .prose :global(blockquote) {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--gold);
+    color: var(--ink-muted);
+  }
+
+  .prose :global(pre) {
+    margin-top: 1rem;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    border: 1px solid var(--gold);
+    border-radius: var(--radius-inner);
+  }
+
+  /* 末尾の資格欄。1段落として小さく置く */
+  .prose--small {
+    font-size: var(--fs-small);
+    line-height: 1.8;
+    color: var(--ink-muted);
+  }
+
+  .prose--small :global(h2) {
+    margin-top: 1.5rem;
+    font-size: var(--fs-small);
+    letter-spacing: 0.1em;
+  }
+</style>

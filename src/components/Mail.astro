@@ -1,0 +1,28 @@
+---
+/**
+ * メールアドレスを user / @ / domain に割って置く。
+ * "@" は CSS の生成内容なので、HTML には連結済みの文字列が出ない。
+ * JavaScript が無効でも読める。有効なときだけ About 側で mailto を組み立てる。
+ */
+interface Props {
+  user: string;
+  domain: string;
+}
+
+const { user, domain } = Astro.props;
+---
+
+<span class="mail"><span class="mail__user">{user}</span><span class="mail__at"></span><span
+    class="mail__domain">{domain}</span></span>
+
+<style>
+  .mail {
+    font-size: var(--fs-small);
+    letter-spacing: 0.02em;
+    overflow-wrap: anywhere;
+  }
+
+  .mail__at::before {
+    content: '@';
+  }
+</style>

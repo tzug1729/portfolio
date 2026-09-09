@@ -1,0 +1,163 @@
+---
+import { render } from 'astro:content';
+import Mail from './Mail.astro';
+import Prose from './Prose.astro';
+import Window from './Window.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import { getAboutSections } from '../lib/content';
+import { site } from '../site.config';
+
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+
+const sections = await getAboutSections(locale);
+const rendered = await Promise.all(
+  sections.map(async ({ entry, fallback }) => ({
+    section: entry.data.section,
+    fallback,
+    Content: (await render(entry)).Content,
+  })),
+);
+
+const lead = rendered.find((item) => item.section === 'affiliation');
+const middle = rendered.filter((item) => item.section === 'activities' || item.section === 'history');
+const tail = rendered.find((item) => item.section === 'certifications');
+const anyFallback = rendered.some((item) => item.fallback);
+
+const mails = [
+  { label: t('about.mailSchool'), ...site.mail.school },
+  { label: t('about.mailPersonal'), ...site.mail.personal },
+];
+---
+
+<section class="about">
+  {/* 主役 */}
+  <Window size="l">
+    <h1>{t('about.title')}</h1>
+    {
+      anyFallback && (
+        <p class="about__fallback">
+          <span lang="en">{t('works.japaneseOnly')}</span>
+        </p>
+      )
+    }
+    {lead && <div class="about__lead"><Prose><lead.Content /></Prose></div>}
+  </Window>
+
+  {/* 従。ここから密度を落としていく */}
+  {
+    middle.map((item) => (
+      <div class="about__section">
+        <Window size="m">
+          <Prose><item.Content /></Prose>
+        </Window>
+      </div>
+    ))
+  }
+
+  {
+    tail && (
+      <div class="about__section about__section--tail">
+        <Window size="s">
+          <Prose size="small"><tail.Content /></Prose>
+        </Window>
+      </div>
+    )
+  }
+
+  <div class="about__contact">
+    <Window size="s">
+      <h2 class="about__contactTitle">{t('about.contact')}</h2>
+      <dl class="about__mails">
+        {
+          mails.map((mail) => (
+            <div class="about__mailRow">
+              <dt class="about__mailLabel">{mail.label}</dt>
+              <dd class="about__mailValue">
+                <Mail user={mail.user} domain={mail.domain} />
+              </dd>
+            </div>
+          ))
+        }
+      </dl>
+    </Window>
+  </div>
+</section>
+
+<script>
+  // JavaScript がある環境でだけ mailto を組み立てる。
+  // 連結済みのアドレスは HTML にもデータ属性にも書かない。
+  for (const mail of document.querySelectorAll<HTMLElement>('.mail')) {
+    const user = mail.querySelector('.mail__user')?.textContent?.trim();
+    const domain = mail.querySelector('.mail__domain')?.textContent?.trim();
+    if (!user || !domain) continue;
+
+    const link = document.createElement('a');
+    link.className = 'mail-link';
+    link.href = `mailto:${user}@${domain}`;
+    link.append(...mail.childNodes);
+    mail.append(link);
+  }
+</script>
+
+<style>
+  .about__fallback {
+    margin-top: 0.6rem;
+    font-size: var(--fs-small);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .about__lead {
+    margin-top: var(--space-item);
+  }
+
+  .about__lead :global(> :first-child) {
+    margin-top: 0;
+  }
+
+  .about__section {
+    margin-top: max(var(--space-window-min), var(--space-section));
+    max-width: 44rem;
+  }
+
+  .about__section--tail {
+    max-width: 30rem;
+  }
+
+  .about__contact {
+    width: fit-content;
+    margin-top: max(var(--space-window-min), var(--space-section));
+  }
+
+  .about__contactTitle {
+    font-size: var(--fs-small);
+    letter-spacing: 0.1em;
+    color: var(--ink-muted);
+  }
+
+  .about__mails {
+    margin-top: 0.5rem;
+  }
+
+  .about__mailRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 0.75em;
+  }
+
+  .about__mailRow + .about__mailRow {
+    margin-top: 0.2rem;
+  }
+
+  .about__mailLabel {
+    font-size: var(--fs-meta);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .about__mailValue {
+    margin: 0;
+  }
+</style>

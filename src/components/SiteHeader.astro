@@ -1,0 +1,83 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import LangSwitch from './LangSwitch.astro';
+import NavLink from './NavLink.astro';
+import Window from './Window.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import { site } from '../site.config';
+
+const { locale, path } = parsePath(Astro.url);
+const t = useTranslations(locale);
+
+/** 一段目のセグメントで現在地を決める */
+const section = path.split('/')[0] ?? '';
+const home = getRelativeLocaleUrl(locale, '');
+
+/** トップへはサイト名から戻る。ナビは2項目 */
+const items = [
+  { key: 'works', href: getRelativeLocaleUrl(locale, 'works'), current: section === 'works' },
+  { key: 'about', href: getRelativeLocaleUrl(locale, 'about'), current: section === 'about' },
+];
+---
+
+<header class="site-header">
+  <Window size="s">
+    <div class="site-header__row">
+      <a class="site-header__name" href={home} aria-current={section === '' ? 'page' : undefined}>
+        {site.name}
+      </a>
+      <nav class="site-header__nav" aria-label={t('a11y.mainNav')}>
+        {items.map((item) => <NavLink href={item.href} current={item.current}>{t(`nav.${item.key}`)}</NavLink>)}
+      </nav>
+      <LangSwitch />
+    </div>
+  </Window>
+</header>
+
+<style>
+  .site-header {
+    margin-bottom: var(--space-section);
+  }
+
+  .site-header__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.75rem;
+  }
+
+  .site-header__name {
+    margin-right: auto;
+    padding: 0.1em 0.15em;
+    color: var(--gold-bright);
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 120ms linear;
+  }
+
+  /* サイト名は ▶ を付けず、下線だけで応答する */
+  .site-header__name:hover,
+  .site-header__name:focus-visible {
+    border-bottom-color: var(--gold-bright);
+  }
+
+  .site-header__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem;
+    font-size: var(--fs-small);
+  }
+
+  /* 360px でも破綻させない。ハンバーガーは作らない */
+  @media (max-width: 30rem) {
+    .site-header__name {
+      flex-basis: 100%;
+      margin-right: 0;
+    }
+
+    .site-header__nav {
+      margin-right: auto;
+    }
+  }
+</style>

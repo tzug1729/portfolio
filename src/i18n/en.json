@@ -1,0 +1,47 @@
+{
+  "site": {
+    "name": "tzug",
+    "description": "TODO: 本文"
+  },
+  "nav": {
+    "works": "Works",
+    "about": "About"
+  },
+  "lang": {
+    "ja": "JA",
+    "en": "EN"
+  },
+  "home": {
+    "tagline": "TODO: 本文",
+    "toWorks": "View Works"
+  },
+  "works": {
+    "title": "Works",
+    "solo": "Solo",
+    "team": "Team",
+    "responsibility": "My part",
+    "constraints": "Constraints",
+    "links": "Links",
+    "linkGithub": "GitHub",
+    "linkDemo": "Demo",
+    "linkArticle": "Article",
+    "japaneseOnly": "Japanese only",
+    "back": "Back to Works"
+  },
+  "about": {
+    "title": "About",
+    "contact": "Contact",
+    "mailSchool": "School",
+    "mailPersonal": "Personal"
+  },
+  "footer": {
+    "github": "GitHub",
+    "qiita": "Qiita"
+  },
+  "a11y": {
+    "skipToContent": "Skip to content",
+    "mainNav": "Main navigation",
+    "langSwitch": "Language",
+    "externalLinks": "External links"
+  }
+}

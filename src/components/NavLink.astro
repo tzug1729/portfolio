@@ -1,0 +1,84 @@
+---
+/**
+ * 先頭に ▶ を置くリンク。▶ は左の溝にぶら下げ、
+ * ホバー・フォーカスで opacity だけを変える（文字が動かない）。
+ *
+ * 文字を周囲の行頭に揃えたいときは、呼び出し側で
+ * margin-left: calc(var(--marker-gutter) * -1) を掛ける。
+ *
+ * 前提: リンクは必ずウィンドウの中（紺地の上）に置く。金がそのまま使える。
+ */
+interface Props {
+  href: string;
+  /** 現在地。地色に --accent-red を使うのはここだけ */
+  current?: boolean;
+  external?: boolean;
+  /** menu: ▶ を常に出し、文字も金にする。ページ末尾の導線など */
+  variant?: 'default' | 'menu';
+  class?: string;
+}
+
+const { href, current = false, external = false, variant = 'default', class: className } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['navlink', `navlink--${variant}`, { 'navlink--current': current }, className]}
+  aria-current={current ? 'page' : undefined}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
+>
+  <span class="navlink__marker" aria-hidden="true">▶</span><span class="navlink__label"><slot /></span>
+</a>
+
+<style>
+  .navlink {
+    position: relative;
+    display: inline-block;
+    /* 左は ▶ の溝ぶん空ける。呼び出し側は同じ量を打ち消して行頭を揃える */
+    padding: 0.1em 0.5em 0.1em var(--marker-gutter);
+    border-radius: 3px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color 120ms linear;
+  }
+
+  .navlink__marker {
+    position: absolute;
+    left: 0.4em;
+    color: var(--gold-bright);
+    opacity: 0;
+    transition: opacity 120ms linear;
+  }
+
+  .navlink__label {
+    transition: color 120ms linear;
+  }
+
+  .navlink:hover .navlink__marker,
+  .navlink:focus-visible .navlink__marker,
+  .navlink--current .navlink__marker,
+  .navlink--menu .navlink__marker {
+    opacity: 1;
+  }
+
+  .navlink:hover .navlink__label,
+  .navlink:focus-visible .navlink__label {
+    color: var(--gold-bright);
+  }
+
+  /* ページ末尾の導線。常に金で出す */
+  .navlink--menu .navlink__label {
+    color: var(--gold-bright);
+  }
+
+  .navlink--current {
+    background-color: var(--accent-red);
+  }
+
+  .navlink--current .navlink__marker,
+  .navlink--current:hover .navlink__label,
+  .navlink--current:focus-visible .navlink__label {
+    color: var(--paper);
+  }
+</style>
