@@ -27,8 +27,6 @@ const works = defineCollection({
       /** role が team のとき必須。自分の担当範囲 */
       responsibility: z.string().optional(),
       tech: z.array(z.string()),
-      /** 期間・機材・予算などの制約 */
-      constraints: z.string(),
       links: z
         .object({
           github: z.url().optional(),
@@ -36,7 +34,6 @@ const works = defineCollection({
           article: z.url().optional(),
         })
         .default({}),
-      featured: z.boolean().default(false),
       order: z.number(),
     })
     .superRefine((data, ctx) => {

@@ -95,17 +95,14 @@ const switching = panels
               <Content />
             </Prose>
 
-            <div class="worksview__constraints">
-              <h3 class="worksview__constraintsTitle">{t('works.constraints')}</h3>
-              <p class="worksview__constraintsText">{entry.data.constraints}</p>
-            </div>
-
             {external.length > 0 && (
               <nav class="worksview__links" aria-label={t('works.links')}>
                 {external.map((link) => (
-                  <NavLink href={link.href} external>
-                    {t(`works.${link.key}`)}
-                  </NavLink>
+                  <p class="worksview__link">
+                    <NavLink href={link.href} variant="menu" external>
+                      {t(`works.${link.key}`)}
+                    </NavLink>
+                  </p>
                 ))}
               </nav>
             )}
@@ -342,28 +339,15 @@ const switching = panels
     color: var(--muted);
   }
 
-  .worksview__constraints {
-    margin-top: var(--space-section);
-  }
-
-  .worksview__constraintsTitle {
-    font-size: var(--fs-small);
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-
-  .worksview__constraintsText {
-    margin-top: 0.35rem;
-    max-width: var(--measure);
-  }
-
+  /* 「このページを単独で開く」と同じコマンド形式で並べる */
   .worksview__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    margin-top: var(--space-item);
+    margin-top: var(--space-section);
     margin-left: calc(var(--marker-gutter) * -1);
     font-size: var(--fs-small);
+  }
+
+  .worksview__link + .worksview__link {
+    margin-top: 0.15rem;
   }
 
   .worksview__standalone {

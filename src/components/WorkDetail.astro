@@ -44,21 +44,16 @@ const external = [
       external.length > 0 && (
         <nav class="work__links" aria-label={t('works.links')}>
           {external.map((link) => (
-            <NavLink href={link.href} external>
-              {t(`works.${link.key}`)}
-            </NavLink>
+            <p class="work__link">
+              <NavLink href={link.href} variant="menu" external>
+                {t(`works.${link.key}`)}
+              </NavLink>
+            </p>
           ))}
         </nav>
       )
     }
   </Window>
-
-  <div class="work__aside">
-    <Window size="m">
-      <h2 class="work__asideTitle">{t('works.constraints')}</h2>
-      <p class="work__asideText">{entry.data.constraints}</p>
-    </Window>
-  </div>
 
   <div class="work__back">
     <Window size="s">

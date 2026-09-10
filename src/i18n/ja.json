@@ -22,11 +22,10 @@
     "solo": "個人",
     "team": "チーム",
     "responsibility": "担当",
-    "constraints": "制約",
     "links": "リンク",
-    "linkGithub": "GitHub",
-    "linkDemo": "Demo",
-    "linkArticle": "記事",
+    "linkGithub": "GitHub で見る",
+    "linkDemo": "デモを見る",
+    "linkArticle": "記事を読む",
     "japaneseOnly": "Japanese only",
     "back": "作品一覧へ",
     "openStandalone": "このページを単独で開く",
@@ -47,7 +46,6 @@
     "mainNav": "メインナビゲーション",
     "langSwitch": "言語切替",
     "externalLinks": "外部リンク",
-    "worksList": "作品一覧",
-    "workDetail": "作品の詳細"
+    "worksList": "作品一覧"
   }
 }

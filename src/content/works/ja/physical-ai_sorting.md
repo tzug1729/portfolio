@@ -4,8 +4,6 @@ slug: imitation-learning-part-sorting
 period: "2026/05～2026/12"
 role: solo
 tech: ["SO-101", "LeRobot", "Python"]
-constraints: "TODO: 本文"
-featured: false
 order: 5
 ---
 

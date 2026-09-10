@@ -20,7 +20,7 @@ const rendered = await Promise.all(
 );
 
 const lead = rendered.find((item) => item.section === 'affiliation');
-const middle = rendered.filter((item) => item.section === 'activities' || item.section === 'history');
+const middle = rendered.filter((item) => item.section === 'activities');
 const tail = rendered.find((item) => item.section === 'certifications');
 const anyFallback = rendered.some((item) => item.fallback);
 

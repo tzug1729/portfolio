@@ -37,7 +37,7 @@ const backgroundStyle = site.backgroundImage
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" href={withBase('favicon.jpg')} type="image/svg+xml" />
+    <link rel="icon" href={withBase('favicon.jpg')} type="image/jpeg" />
 
     {/* 対応言語版の相互リンク */}
     {locales.map((code) => <link rel="alternate" hreflang={code} href={getAbsoluteLocaleUrl(code, path)} />)}

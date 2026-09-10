@@ -5,8 +5,6 @@ period: "2025/08～2025/11"
 role: team
 responsibility: "PM兼プログラマー"
 tech: ["Python", "pygame"]
-constraints: "TODO: 本文"
-featured: false
 order: 2
 ---
 

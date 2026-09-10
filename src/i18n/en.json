@@ -22,11 +22,10 @@
     "solo": "Solo",
     "team": "Team",
     "responsibility": "My part",
-    "constraints": "Constraints",
     "links": "Links",
-    "linkGithub": "GitHub",
-    "linkDemo": "Demo",
-    "linkArticle": "Article",
+    "linkGithub": "View on GitHub",
+    "linkDemo": "View demo",
+    "linkArticle": "Read article",
     "japaneseOnly": "Japanese only",
     "back": "Back to Works",
     "openStandalone": "Open this page on its own",
@@ -47,7 +46,6 @@
     "mainNav": "Main navigation",
     "langSwitch": "Language",
     "externalLinks": "External links",
-    "worksList": "Works list",
-    "workDetail": "Work detail"
+    "worksList": "Works list"
   }
 }
