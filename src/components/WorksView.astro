@@ -35,16 +35,12 @@ const panels = await Promise.all(
 /** 初期状態は先頭を選択済み。右側を空にしない */
 const initial = panels[0]?.entry.data.slug ?? '';
 
-/** slug ごとの表示切り替え規則。JS が触るのは data-selected だけ */
+/**
+ * slug ごとのパネル表示切り替え。JS が触るのは data-selected だけ。
+ * 一覧側の見た目（金の文字と ▶）は aria-current が持つので、ここには書かない。
+ */
 const switching = panels
-  .map(({ entry }) => {
-    const slug = entry.data.slug;
-    return [
-      `.worksview[data-selected="${slug}"] [data-panel="${slug}"]{display:block}`,
-      `.worksview[data-selected="${slug}"] [data-item="${slug}"]{color:var(--gold-bright)}`,
-      `.worksview[data-selected="${slug}"] [data-item="${slug}"] .worksview__marker{opacity:1}`,
-    ].join('');
-  })
+  .map(({ entry }) => `.worksview[data-selected="${entry.data.slug}"] [data-panel="${entry.data.slug}"]{display:block}`)
   .join('');
 ---
 
@@ -55,17 +51,17 @@ const switching = panels
     <Window size="m">
       <h1 class="worksview__title">{t('works.title')}</h1>
 
-      <ul class="worksview__items" aria-label={t('a11y.worksList')}>
+      <ul class="worksview__items marker-group" aria-label={t('a11y.worksList')}>
         {
           panels.map(({ entry, href }) => (
             <li>
               <a
-                class="worksview__item"
+                class="worksview__item marker-item"
                 href={href}
                 data-item={entry.data.slug}
                 aria-current={entry.data.slug === initial ? 'true' : undefined}
               >
-                <span class="worksview__marker" aria-hidden="true">▶</span>
+                <span class="worksview__marker marker" aria-hidden="true">▶</span>
                 <span class="worksview__name">{entry.data.title}</span>
                 <span class="worksview__period">{entry.data.period}</span>
               </a>
@@ -95,29 +91,27 @@ const switching = panels
               <Content />
             </Prose>
 
-            {external.length > 0 && (
-              <nav class="worksview__links" aria-label={t('works.links')}>
-                {external.map((link) => (
-                  <p class="worksview__link">
-                    <NavLink href={link.href} variant="menu" external>
-                      {t(`works.${link.key}`)}
-                    </NavLink>
-                  </p>
-                ))}
-              </nav>
-            )}
+            {/* 末尾のリンク群。ひとまとまりなので ▶ は常にこの中の1つだけ */}
+            <nav class="worksview__commands marker-group" aria-label={t('works.links')}>
+              {external.map((link) => (
+                <p class="worksview__command">
+                  <NavLink href={link.href} external>
+                    {t(`works.${link.key}`)}
+                  </NavLink>
+                </p>
+              ))}
 
-            <p class="worksview__standalone">
-              <NavLink href={href} variant="menu">
-                {t('works.openStandalone')}
-              </NavLink>
-            </p>
+              <p class="worksview__command worksview__command--standalone">
+                <NavLink href={href}>{t('works.openStandalone')}</NavLink>
+              </p>
 
-            <p class="worksview__close">
-              <button type="button" class="worksview__closeButton" data-close>
-                <span class="worksview__closeMarker" aria-hidden="true">▶</span>{t('works.close')}
-              </button>
-            </p>
+              <p class="worksview__command worksview__command--close">
+                <button type="button" class="worksview__closeButton marker-item" data-close>
+                  <span class="worksview__closeMarker marker" aria-hidden="true">▶</span>
+                  <span class="worksview__closeLabel">{t('works.close')}</span>
+                </button>
+              </p>
+            </nav>
           </article>
         ))
       }
@@ -299,17 +293,15 @@ const switching = panels
     position: absolute;
     left: 0.4em;
     color: var(--gold-bright);
-    opacity: 0;
-    transition: opacity 120ms linear;
   }
 
-  .worksview__name {
-    transition: color 120ms linear;
-  }
-
-  .worksview__item:hover .worksview__name,
-  .worksview__item:focus-visible .worksview__name {
+  /* 選択中の1件だけを金にする。ホバーで色は動かさず ▶ だけが移る */
+  .worksview__item[aria-current] {
     color: var(--gold-bright);
+  }
+
+  .worksview__item[aria-current] .marker {
+    opacity: 1;
   }
 
   .worksview__period {
@@ -339,45 +331,43 @@ const switching = panels
     color: var(--muted);
   }
 
-  /* 「このページを単独で開く」と同じコマンド形式で並べる */
-  .worksview__links {
+  /* 末尾のリンク群。
+     ▶ の溝ぶんだけ左に出し、リンクの文字が本文の1文字目と縦に揃うようにする。
+     字寸はここでだけ指定する（--marker-gutter は em なので子で変えない）*/
+  .worksview__commands {
     margin-top: var(--space-section);
     margin-left: calc(var(--marker-gutter) * -1);
     font-size: var(--fs-small);
   }
 
-  .worksview__link + .worksview__link {
+  .worksview__command + .worksview__command {
     margin-top: 0.15rem;
   }
 
-  .worksview__standalone {
-    margin-top: var(--space-item);
-    margin-left: calc(var(--marker-gutter) * -1);
-    font-size: var(--fs-small);
-  }
-
   /* 縦積みのときだけ出す。JS が無い環境では出さない */
-  .worksview__close {
+  .worksview__command--close {
     display: none;
-    margin-top: var(--space-item);
-    margin-left: calc(var(--marker-gutter) * -1);
   }
 
+  /* 見た目はリンクに合わせる。字寸は継承させる（溝の幅を揃えるため） */
   .worksview__closeButton {
     position: relative;
+    display: inline-block;
     padding: 0.1em 0.5em 0.1em var(--marker-gutter);
     border: 0;
     border-radius: 3px;
     background: none;
-    color: var(--gold-bright);
+    color: var(--paper);
     font: inherit;
-    font-size: var(--fs-small);
+    letter-spacing: inherit;
+    text-align: left;
     cursor: pointer;
   }
 
   .worksview__closeMarker {
     position: absolute;
     left: 0.4em;
+    color: var(--gold-bright);
   }
 
   /* ------------------------------------------------------------------
@@ -398,8 +388,13 @@ const switching = panels
       width: 100%;
     }
 
-    .worksview[data-js] .worksview__close {
+    .worksview[data-js] .worksview__command--close {
       display: block;
+    }
+
+    /* 縦積みでは一覧がすぐ上にあるので、単独ページへの導線は出さない */
+    .worksview__command--standalone {
+      display: none;
     }
   }
 </style>

@@ -10,19 +10,19 @@ const { locale, path } = parsePath(Astro.url);
 const t = useTranslations(locale);
 ---
 
-<nav class="lang" aria-label={t('a11y.langSwitch')}>
+<nav class="lang marker-group" aria-label={t('a11y.langSwitch')}>
   {
     locales.map((code, index) => (
       <>
         {index > 0 && <span class="lang__sep" aria-hidden="true">/</span>}
         <a
           href={getRelativeLocaleUrl(code, path)}
-          class:list={['lang__link', { 'lang__link--current': code === locale }]}
+          class:list={['lang__link', 'marker-item', { 'lang__link--current': code === locale }]}
           lang={code}
           hreflang={code}
           aria-current={code === locale ? 'true' : undefined}
         >
-          <span class="lang__marker" aria-hidden="true">▶</span>{t(`lang.${code}`)}
+          <span class="lang__marker marker" aria-hidden="true">▶</span>{t(`lang.${code}`)}
         </a>
       </>
     ))
@@ -53,24 +53,15 @@ const t = useTranslations(locale);
   }
 
   .lang__marker {
-    opacity: 0;
-    color: var(--gold-bright);
-    transition: opacity 120ms linear;
-  }
-
-  .lang__link:hover,
-  .lang__link:focus-visible {
     color: var(--gold-bright);
   }
 
-  .lang__link:hover .lang__marker,
-  .lang__link:focus-visible .lang__marker,
-  .lang__link--current .lang__marker {
-    opacity: 1;
-  }
-
-  /* 現在の言語は地色ではなく文字色で示す */
+  /* 現在の言語は地色ではなく文字色で示す。▶ もここに出る */
   .lang__link--current {
     color: var(--gold-bright);
+  }
+
+  .lang__link--current .marker {
+    opacity: 1;
   }
 </style>

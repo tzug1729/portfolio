@@ -1,11 +1,14 @@
 ---
 title: Hisayoshi
 slug: hisayoshi
-period: "2025/08～2025/11"
+period: "2025/08　～　2025/11"
 role: team
 responsibility: "PM兼プログラマー"
 tech: ["Python", "pygame"]
-order: 2
+links:
+  github: "https://github.com/tzug1729/2025_2I_kosen-fes"
+order: 1
+
 ---
 
 ## なぜ作ったか

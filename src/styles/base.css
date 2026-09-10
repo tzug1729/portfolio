@@ -159,6 +159,41 @@ samp {
 }
 
 /* ------------------------------------------------------------------
+   ▶ の出し分け
+
+   原則: ひとつのまとまり（.marker-group）の中で ▶ は同時に1つだけ。
+   既定は「選ばれている1つ」に出し、ホバー中・フォーカス中は
+   そちらへ移す。離れたら元に戻る。溝は全項目で確保する。
+
+   参加する要素:
+     .marker-group … ナビ / 一覧 / リンク群などのまとまり
+     .marker-item  … その中の各リンク・ボタン
+     .marker       … ▶ 本体
+   ------------------------------------------------------------------ */
+.marker {
+  opacity: 0;
+  transition: opacity 120ms linear;
+}
+
+/* 触れているものには出す */
+.marker-group .marker-item:hover .marker,
+.marker-group .marker-item:focus-visible .marker {
+  opacity: 1;
+}
+
+/* まとまりの中にホバーがあれば、それ以外からは引っ込める */
+.marker-group:has(.marker-item:hover) .marker-item:not(:hover) .marker {
+  opacity: 0;
+}
+
+/* ホバーが無くフォーカスがあるときも同じ。ホバーを優先する */
+.marker-group:not(:has(.marker-item:hover)):has(.marker-item:focus-visible)
+  .marker-item:not(:focus-visible)
+  .marker {
+  opacity: 0;
+}
+
+/* ------------------------------------------------------------------
    ウィンドウ同士は必ず離す。金線が接触するのを防ぐ下限で、
    個別に指定した余白がこれより大きければそちらが勝つ
    :where() で特異度を 0 にして、個別指定が必ず勝つようにする

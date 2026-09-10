@@ -24,7 +24,7 @@ const items = [
   <Window size="s">
     <div class="site-header__row">
       <span class="site-header__name">{site.name}</span>
-      <nav class="site-header__nav" aria-label={t('a11y.mainNav')}>
+      <nav class="site-header__nav marker-group" aria-label={t('a11y.mainNav')}>
         {items.map((item) => <NavLink href={item.href} current={item.current}>{t(`nav.${item.key}`)}</NavLink>)}
       </nav>
       <LangSwitch />

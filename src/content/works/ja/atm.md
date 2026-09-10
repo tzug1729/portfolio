@@ -1,7 +1,7 @@
 ---
 title: AI-based Touchless Machine (ATM)
 slug: atm-simulator
-period: "2025/11～2025/12"
+period: "2025/11　～　2025/12"
 role: solo
 tech: ["Python", "YOLO", "OpenCV", "Tkinter"]
 links:

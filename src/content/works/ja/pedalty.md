@@ -1,10 +1,12 @@
 ---
 title: Pedalty
-slug: Pedalty
-period: "2026/03～2026/10"
+slug: pedalty
+period: "2026/03　～　2026/10"
 role: team
 responsibility: "回路担当"
 tech: ["Unity", "C#", "Arduino"]
+links:
+  github: "https://github.com/tatsukodx/Pedalty"
 order: 4
 ---
 

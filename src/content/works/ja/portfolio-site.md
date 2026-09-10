@@ -4,7 +4,9 @@ slug: portfolio-site
 period: "2025/10　～　現在"
 role: solo
 tech: ["Astro", "TypeScript", "CSS"]
-order: 1
+links:
+  github: "https://github.com/tzug1729/portfolio"
+order: 2
 ---
 
 ## なぜ作ったか

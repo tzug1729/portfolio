@@ -1,10 +1,12 @@
 ---
 title: 3LM Chat
-slug: 3LM Chat
-period: "2026/06～2026/07"
+slug: 3lm-chat
+period: "2026/06　～　2026/07"
 role: team
 responsibility: "アプリ制作の全て"
 tech: ["Python", "LLM", "Ollama"]
+links:
+  github: "https://github.com/tzug1729/3LM-Chat"
 order: 6
 ---
 

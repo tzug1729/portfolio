@@ -42,10 +42,10 @@ const external = [
 
     {
       external.length > 0 && (
-        <nav class="work__links" aria-label={t('works.links')}>
+        <nav class="work__links marker-group" aria-label={t('works.links')}>
           {external.map((link) => (
             <p class="work__link">
-              <NavLink href={link.href} variant="menu" external>
+              <NavLink href={link.href} external>
                 {t(`works.${link.key}`)}
               </NavLink>
             </p>
@@ -55,9 +55,9 @@ const external = [
     }
   </Window>
 
-  <div class="work__back">
+  <div class="work__back marker-group">
     <Window size="s">
-      <NavLink href={getRelativeLocaleUrl(locale, 'works')} variant="menu">{t('works.back')}</NavLink>
+      <NavLink href={getRelativeLocaleUrl(locale, 'works')}>{t('works.back')}</NavLink>
     </Window>
   </div>
 </article>
@@ -102,7 +102,7 @@ const external = [
     font-size: var(--fs-small);
   }
 
-  /* ページ末尾で唯一の導線。窓に入れて金のまま読ませる */
+  /* ページ末尾の導線。小さな窓に収めるので溝は窓の内側に置く */
   .work__back {
     width: fit-content;
     margin-top: max(var(--space-window-min), var(--space-section));

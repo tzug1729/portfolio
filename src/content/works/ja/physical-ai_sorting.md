@@ -1,7 +1,7 @@
 ---
 title: Physical AIを用いた部品分別機開発
 slug: imitation-learning-part-sorting
-period: "2026/05～2026/12"
+period: "2026/05　～　2026/12"
 role: solo
 tech: ["SO-101", "LeRobot", "Python"]
 order: 5

@@ -1,41 +1,42 @@
 ---
 /**
- * 先頭に ▶ を置くリンク。▶ は左の溝にぶら下げ、
- * ホバー・フォーカスで opacity だけを変える（文字が動かない）。
+ * 先頭に ▶ を置くリンク。▶ は左の溝にぶら下げる。
  *
- * 文字を周囲の行頭に揃えたいときは、呼び出し側で
+ * ▶ の出し分けは base.css の .marker-group / .marker-item / .marker が持つ。
+ * 「まとまりの中で ▶ はいつも1つだけ」という原則をそこで一括して守る。
+ * 呼び出し側は、リンクを囲む要素に .marker-group を付けること。
+ *
+ * 文字を周囲の行頭に揃えたいときは、まとまり側で
  * margin-left: calc(var(--marker-gutter) * -1) を掛ける。
- *
- * 前提: リンクは必ずウィンドウの中（紺地の上）に置く。金がそのまま使える。
+ * その際まとまりに font-size を指定し、リンク側では指定しないこと
+ * （--marker-gutter は em なので、字寸がずれると溝の幅も食い違う）。
  */
 interface Props {
   href: string;
   /** 現在地。地色に --accent-red を使うのはここだけ */
   current?: boolean;
   external?: boolean;
-  /** menu: ▶ を常に出し、文字も金にする。ページ末尾の導線など */
-  variant?: 'default' | 'menu';
   class?: string;
 }
 
-const { href, current = false, external = false, variant = 'default', class: className } = Astro.props;
+const { href, current = false, external = false, class: className } = Astro.props;
 ---
 
 <a
   href={href}
-  class:list={['navlink', `navlink--${variant}`, { 'navlink--current': current }, className]}
+  class:list={['navlink', 'marker-item', { 'navlink--current': current }, className]}
   aria-current={current ? 'page' : undefined}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
 >
-  <span class="navlink__marker" aria-hidden="true">▶</span><span class="navlink__label"><slot /></span>
+  <span class="navlink__marker marker" aria-hidden="true">▶</span><span class="navlink__label"><slot /></span>
 </a>
 
 <style>
   .navlink {
     position: relative;
     display: inline-block;
-    /* 左は ▶ の溝ぶん空ける。呼び出し側は同じ量を打ち消して行頭を揃える */
+    /* 左は ▶ の溝ぶん空ける。まとまり側は同じ量を打ち消して行頭を揃える */
     padding: 0.1em 0.5em 0.1em var(--marker-gutter);
     border-radius: 3px;
     color: var(--paper);
@@ -47,38 +48,15 @@ const { href, current = false, external = false, variant = 'default', class: cla
     position: absolute;
     left: 0.4em;
     color: var(--gold-bright);
-    opacity: 0;
-    transition: opacity 120ms linear;
   }
 
-  .navlink__label {
-    transition: color 120ms linear;
-  }
-
-  .navlink:hover .navlink__marker,
-  .navlink:focus-visible .navlink__marker,
-  .navlink--current .navlink__marker,
-  .navlink--menu .navlink__marker {
-    opacity: 1;
-  }
-
-  .navlink:hover .navlink__label,
-  .navlink:focus-visible .navlink__label {
-    color: var(--gold-bright);
-  }
-
-  /* ページ末尾の導線。常に金で出す */
-  .navlink--menu .navlink__label {
-    color: var(--gold-bright);
-  }
-
+  /* 現在地。▶ も出す */
   .navlink--current {
     background-color: var(--accent-red);
   }
 
-  .navlink--current .navlink__marker,
-  .navlink--current:hover .navlink__label,
-  .navlink--current:focus-visible .navlink__label {
+  .navlink--current .marker {
+    opacity: 1;
     color: var(--paper);
   }
 </style>
