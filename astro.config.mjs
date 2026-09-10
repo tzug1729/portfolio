@@ -9,6 +9,11 @@ const base = process.env.BASE_PATH ?? '/portfolio';
 export default defineConfig({
   site,
   base,
+  markdown: {
+    // 曲線引用符に変換しない。Kosugi Maru では ’ ” が全角幅で描画され、
+    // 英文の中に不自然な空きができるため
+    smartypants: false,
+  },
   i18n: {
     defaultLocale: 'ja',
     locales: ['ja', 'en'],

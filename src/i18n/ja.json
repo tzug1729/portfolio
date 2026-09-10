@@ -1,7 +1,7 @@
 {
   "site": {
     "name": "tzug",
-    "description": "TODO: 本文"
+    "description": "tzugのポートフォリオ"
   },
   "nav": {
     "home": "トップ",
@@ -13,7 +13,7 @@
     "en": "EN"
   },
   "home": {
-    "tagline": "TODO: 本文",
+    "tagline": "公立大高専の知能情報コースに通っている学生です．最近はPhysical AIについて勉強・開発しています．",
     "toAbout": "プロフィールを見る",
     "toWorks": "作品を見る"
   },
