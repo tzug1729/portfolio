@@ -62,7 +62,7 @@ const about = defineCollection({
     generateId: ({ entry }) => entry.replace(/\.[^.]+$/, ''),
   }),
   schema: z.object({
-    section: z.enum(['affiliation', 'activities', 'history', 'certifications']),
+    section: z.enum(['affiliation', 'activities', 'certifications']),
     order: z.number(),
   }),
 });
