@@ -1,0 +1,421 @@
+---
+import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import NavLink from './NavLink.astro';
+import Prose from './Prose.astro';
+import Window from './Window.astro';
+import WorkMeta from './WorkMeta.astro';
+import { parsePath, useTranslations } from '../i18n/ui';
+import { getWorks } from '../lib/content';
+
+/**
+ * 左に一覧(M)、右に詳細(L)。全作品の本文を最初から出力しておき、
+ * 表示の切り替えは data-selected を書き換えるだけで CSS が行う。
+ * 非同期読み込みも URL の書き換えもしない。
+ * JavaScript が無効なら、各項目は個別ページへの通常リンクとして動く。
+ */
+const { locale } = parsePath(Astro.url);
+const t = useTranslations(locale);
+const works = await getWorks(locale);
+
+const panels = await Promise.all(
+  works.map(async ({ entry, fallback }) => ({
+    entry,
+    fallback,
+    href: getRelativeLocaleUrl(locale, `works/${entry.data.slug}`),
+    Content: (await render(entry)).Content,
+    external: [
+      entry.data.links.github ? { key: 'linkGithub', href: entry.data.links.github } : null,
+      entry.data.links.demo ? { key: 'linkDemo', href: entry.data.links.demo } : null,
+      entry.data.links.article ? { key: 'linkArticle', href: entry.data.links.article } : null,
+    ].filter((link): link is { key: string; href: string } => link !== null),
+  })),
+);
+
+/** 初期状態は先頭を選択済み。右側を空にしない */
+const initial = panels[0]?.entry.data.slug ?? '';
+
+/** slug ごとの表示切り替え規則。JS が触るのは data-selected だけ */
+const switching = panels
+  .map(({ entry }) => {
+    const slug = entry.data.slug;
+    return [
+      `.worksview[data-selected="${slug}"] [data-panel="${slug}"]{display:block}`,
+      `.worksview[data-selected="${slug}"] [data-item="${slug}"]{color:var(--gold-bright)}`,
+      `.worksview[data-selected="${slug}"] [data-item="${slug}"] .worksview__marker{opacity:1}`,
+    ].join('');
+  })
+  .join('');
+---
+
+<style is:inline set:html={switching}></style>
+
+<section class="worksview" data-selected={initial} data-open="true">
+  <div class="worksview__list">
+    <Window size="m">
+      <h1 class="worksview__title">{t('works.title')}</h1>
+
+      <ul class="worksview__items" aria-label={t('a11y.worksList')}>
+        {
+          panels.map(({ entry, href }) => (
+            <li>
+              <a
+                class="worksview__item"
+                href={href}
+                data-item={entry.data.slug}
+                aria-current={entry.data.slug === initial ? 'true' : undefined}
+              >
+                <span class="worksview__marker" aria-hidden="true">▶</span>
+                <span class="worksview__name">{entry.data.title}</span>
+                <span class="worksview__period">{entry.data.period}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </Window>
+  </div>
+
+  <div class="worksview__detail" data-detail>
+    <Window size="l">
+      {
+        panels.map(({ entry, fallback, href, Content, external }) => (
+          <article class="worksview__panel" data-panel={entry.data.slug} aria-label={entry.data.title}>
+            <header class="worksview__head">
+              <h2>{entry.data.title}</h2>
+              <WorkMeta entry={entry} />
+              {fallback && (
+                <p class="worksview__fallback">
+                  <span lang="en">{t('works.japaneseOnly')}</span>
+                </p>
+              )}
+            </header>
+
+            <Prose>
+              <Content />
+            </Prose>
+
+            <div class="worksview__constraints">
+              <h3 class="worksview__constraintsTitle">{t('works.constraints')}</h3>
+              <p class="worksview__constraintsText">{entry.data.constraints}</p>
+            </div>
+
+            {external.length > 0 && (
+              <nav class="worksview__links" aria-label={t('works.links')}>
+                {external.map((link) => (
+                  <NavLink href={link.href} external>
+                    {t(`works.${link.key}`)}
+                  </NavLink>
+                ))}
+              </nav>
+            )}
+
+            <p class="worksview__standalone">
+              <NavLink href={href} variant="menu">
+                {t('works.openStandalone')}
+              </NavLink>
+            </p>
+
+            <p class="worksview__close">
+              <button type="button" class="worksview__closeButton" data-close>
+                <span class="worksview__closeMarker" aria-hidden="true">▶</span>{t('works.close')}
+              </button>
+            </p>
+          </article>
+        ))
+      }
+    </Window>
+  </div>
+</section>
+
+<script>
+  const view = document.querySelector<HTMLElement>('.worksview');
+
+  if (view) {
+    // JS がある環境でだけ「とじる」を出す
+    view.dataset.js = 'true';
+
+    const items = Array.from(view.querySelectorAll<HTMLAnchorElement>('[data-item]'));
+    const detail = view.querySelector<HTMLElement>('[data-detail]');
+    const stacked = window.matchMedia('(max-width: 44rem)');
+
+    // 展開が終わったら印を外す。差し替えのときに再生されないようにする
+    detail?.addEventListener('animationend', () => detail.classList.remove('is-opening'));
+
+    const select = (slug: string, options: { scroll?: boolean } = {}) => {
+      const wasClosed = view.dataset.open !== 'true';
+
+      view.dataset.selected = slug;
+      view.dataset.open = 'true';
+
+      for (const item of items) {
+        if (item.dataset.item === slug) item.setAttribute('aria-current', 'true');
+        else item.removeAttribute('aria-current');
+      }
+
+      // 閉じた状態から開くときだけ展開させる。差し替えでは動かさない
+      if (wasClosed && detail) {
+        detail.classList.remove('is-opening');
+        void detail.offsetWidth;
+        detail.classList.add('is-opening');
+      }
+
+      // 縦積みのときは詳細の先頭を画面上部へ
+      if (options.scroll && stacked.matches && detail) {
+        detail.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
+    };
+
+    const close = () => {
+      view.dataset.open = 'false';
+      const current = items.find((item) => item.dataset.item === view.dataset.selected);
+      current?.focus();
+    };
+
+    for (const item of items) {
+      item.addEventListener('click', (event) => {
+        // 修飾キー付き・中クリックは通常のリンクとして通す
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        const slug = item.dataset.item;
+        if (slug) select(slug, { scroll: true });
+      });
+    }
+
+    view.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      if (target.closest('[data-close]')) close();
+    });
+
+    view.addEventListener('keydown', (event) => {
+      const index = items.indexOf(document.activeElement as HTMLAnchorElement);
+
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'ArrowUp': {
+          if (index === -1) return;
+          event.preventDefault();
+          const step = event.key === 'ArrowDown' ? 1 : -1;
+          // 端で反対側に回り込む
+          items[(index + step + items.length) % items.length]?.focus();
+          break;
+        }
+        case 'Enter':
+        case 'ArrowRight': {
+          if (index === -1) return;
+          event.preventDefault();
+          const slug = items[index]?.dataset.item;
+          if (slug) select(slug, { scroll: true });
+          break;
+        }
+        case 'ArrowLeft': {
+          if (index === -1) return;
+          event.preventDefault();
+          close();
+          break;
+        }
+        case 'Escape': {
+          event.preventDefault();
+          close();
+          break;
+        }
+      }
+    });
+  }
+</script>
+
+<style>
+  .worksview {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--split-gap);
+  }
+
+  /* 横並びのときは縦の余白を作らない。金線は gap で離す */
+  .worksview__list,
+  .worksview__detail {
+    margin-top: 0;
+  }
+
+  /* 内容に合わせた固定幅。画面幅に応じて伸縮させない */
+  .worksview__list {
+    position: sticky;
+    top: 1rem;
+    flex: 0 0 var(--list-width);
+    align-self: start;
+  }
+
+  .worksview__detail {
+    flex: 1 1 auto;
+    min-width: 0;
+    transform-origin: top center;
+  }
+
+  /* 閉じた状態から開くときだけの展開。フェードは使わない */
+  .worksview__detail.is-opening {
+    animation: worksview-expand 100ms ease-out;
+  }
+
+  @keyframes worksview-expand {
+    from {
+      transform: scaleY(0);
+    }
+
+    to {
+      transform: scaleY(1);
+    }
+  }
+
+  .worksview[data-open='false'] .worksview__detail {
+    display: none;
+  }
+
+  /* ------------------------------------------------------------------
+     一覧
+     ------------------------------------------------------------------ */
+  .worksview__title {
+    margin-bottom: var(--space-item);
+  }
+
+  .worksview__items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .worksview__items li + li {
+    margin-top: 0.5rem;
+  }
+
+  .worksview__item {
+    position: relative;
+    display: block;
+    /* ▶ の溝は全項目で確保して行頭を揃える */
+    padding: 0.3em 0.4em 0.3em var(--marker-gutter);
+    border-radius: 3px;
+    color: var(--paper);
+    text-decoration: none;
+    line-height: 1.7;
+  }
+
+  .worksview__marker {
+    position: absolute;
+    left: 0.4em;
+    color: var(--gold-bright);
+    opacity: 0;
+    transition: opacity 120ms linear;
+  }
+
+  .worksview__name {
+    transition: color 120ms linear;
+  }
+
+  .worksview__item:hover .worksview__name,
+  .worksview__item:focus-visible .worksview__name {
+    color: var(--gold-bright);
+  }
+
+  .worksview__period {
+    display: block;
+    font-size: var(--fs-meta);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  /* ------------------------------------------------------------------
+     詳細
+     ------------------------------------------------------------------ */
+  .worksview__panel {
+    display: none;
+  }
+
+  .worksview__head {
+    margin-bottom: var(--space-item);
+  }
+
+  .worksview__fallback {
+    margin-top: 0.6rem;
+    font-size: var(--fs-small);
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .worksview__constraints {
+    margin-top: var(--space-section);
+  }
+
+  .worksview__constraintsTitle {
+    font-size: var(--fs-small);
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  .worksview__constraintsText {
+    margin-top: 0.35rem;
+    max-width: var(--measure);
+  }
+
+  .worksview__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: var(--space-item);
+    margin-left: calc(var(--marker-gutter) * -1);
+    font-size: var(--fs-small);
+  }
+
+  .worksview__standalone {
+    margin-top: var(--space-item);
+    margin-left: calc(var(--marker-gutter) * -1);
+    font-size: var(--fs-small);
+  }
+
+  /* 縦積みのときだけ出す。JS が無い環境では出さない */
+  .worksview__close {
+    display: none;
+    margin-top: var(--space-item);
+    margin-left: calc(var(--marker-gutter) * -1);
+  }
+
+  .worksview__closeButton {
+    position: relative;
+    padding: 0.1em 0.5em 0.1em var(--marker-gutter);
+    border: 0;
+    border-radius: 3px;
+    background: none;
+    color: var(--gold-bright);
+    font: inherit;
+    font-size: var(--fs-small);
+    cursor: pointer;
+  }
+
+  .worksview__closeMarker {
+    position: absolute;
+    left: 0.4em;
+  }
+
+  /* ------------------------------------------------------------------
+     360px。縦積みにして sticky を解く。一覧は消さない
+     ------------------------------------------------------------------ */
+  @media (max-width: 44rem) {
+    .worksview {
+      flex-direction: column;
+    }
+
+    .worksview__list {
+      position: static;
+      flex: 0 0 auto;
+      width: 100%;
+    }
+
+    .worksview__detail {
+      width: 100%;
+    }
+
+    .worksview[data-js] .worksview__close {
+      display: block;
+    }
+  }
+</style>

@@ -4,8 +4,9 @@
     "description": "TODO: 本文"
   },
   "nav": {
-    "works": "Works",
-    "about": "About"
+    "home": "Home",
+    "about": "About",
+    "works": "Works"
   },
   "lang": {
     "ja": "JA",
@@ -13,6 +14,7 @@
   },
   "home": {
     "tagline": "TODO: 本文",
+    "toAbout": "View About",
     "toWorks": "View Works"
   },
   "works": {
@@ -26,7 +28,9 @@
     "linkDemo": "Demo",
     "linkArticle": "Article",
     "japaneseOnly": "Japanese only",
-    "back": "Back to Works"
+    "back": "Back to Works",
+    "openStandalone": "Open this page on its own",
+    "close": "Close"
   },
   "about": {
     "title": "About",
@@ -42,6 +46,8 @@
     "skipToContent": "Skip to content",
     "mainNav": "Main navigation",
     "langSwitch": "Language",
-    "externalLinks": "External links"
+    "externalLinks": "External links",
+    "worksList": "Works list",
+    "workDetail": "Work detail"
   }
 }

@@ -15,9 +15,10 @@ const t = useTranslations(locale);
     <Window size="l">
       <h1 class="home__name">{site.name}</h1>
       <p class="home__tagline">{t('home.tagline')}</p>
-      <p class="home__cta">
+      <nav class="home__cta" aria-label={t('a11y.mainNav')}>
+        <NavLink href={getRelativeLocaleUrl(locale, 'about')}>{t('home.toAbout')}</NavLink>
         <NavLink href={getRelativeLocaleUrl(locale, 'works')}>{t('home.toWorks')}</NavLink>
-      </p>
+      </nav>
     </Window>
   </div>
 </section>
@@ -43,10 +44,15 @@ const t = useTranslations(locale);
   .home__tagline {
     margin-top: 0.75rem;
     max-width: var(--measure);
-    color: var(--ink);
+    color: var(--paper);
   }
 
+  /* 順番はヘッダーのナビと揃える */
   .home__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
     margin-top: var(--space-item);
     margin-left: calc(var(--marker-gutter) * -1);
   }

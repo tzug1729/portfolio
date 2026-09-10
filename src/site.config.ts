@@ -4,6 +4,13 @@
 export const site = {
   name: 'tzug',
 
+  /**
+   * 全面に敷く背景写真。public/ 配下のファイル名を書く。
+   * null なら --bg-dark 一色。ぼかし・彩度・オーバーレイの強さは
+   * src/styles/tokens.css の --bg-* で調整する。
+   */
+  backgroundImage: '../public/background.jpg',
+
   /** フッターの外部リンク */
   github: 'https://github.com/tzug1729',
   qiita: 'https://qiita.com/tzug1729',

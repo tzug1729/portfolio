@@ -11,21 +11,19 @@ const t = useTranslations(locale);
 
 /** 一段目のセグメントで現在地を決める */
 const section = path.split('/')[0] ?? '';
-const home = getRelativeLocaleUrl(locale, '');
 
-/** トップへはサイト名から戻る。ナビは2項目 */
+/** トップ / プロフィール / 作品 の3項目。サイト名はリンクにしない */
 const items = [
-  { key: 'works', href: getRelativeLocaleUrl(locale, 'works'), current: section === 'works' },
+  { key: 'home', href: getRelativeLocaleUrl(locale, ''), current: section === '' },
   { key: 'about', href: getRelativeLocaleUrl(locale, 'about'), current: section === 'about' },
+  { key: 'works', href: getRelativeLocaleUrl(locale, 'works'), current: section === 'works' },
 ];
 ---
 
 <header class="site-header">
   <Window size="s">
     <div class="site-header__row">
-      <a class="site-header__name" href={home} aria-current={section === '' ? 'page' : undefined}>
-        {site.name}
-      </a>
+      <span class="site-header__name">{site.name}</span>
       <nav class="site-header__nav" aria-label={t('a11y.mainNav')}>
         {items.map((item) => <NavLink href={item.href} current={item.current}>{t(`nav.${item.key}`)}</NavLink>)}
       </nav>
@@ -48,18 +46,8 @@ const items = [
 
   .site-header__name {
     margin-right: auto;
-    padding: 0.1em 0.15em;
     color: var(--gold-bright);
     letter-spacing: 0.12em;
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 120ms linear;
-  }
-
-  /* サイト名は ▶ を付けず、下線だけで応答する */
-  .site-header__name:hover,
-  .site-header__name:focus-visible {
-    border-bottom-color: var(--gold-bright);
   }
 
   .site-header__nav {

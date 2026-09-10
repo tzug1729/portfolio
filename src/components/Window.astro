@@ -42,17 +42,13 @@ const {
 
 <style>
   /* 外枠 1px → 3px の間 → 内枠 1px。影は落とさない */
-  /* ウィンドウの中は配色スキームに関係なく紺地。
-     役割トークンをここで塗り直すので、中身は明暗を意識しなくてよい */
+  /* 背景写真を透かすため半透明。濃さは --window-opacity で調整する */
   .window {
-    --ink: var(--paper);
-    --ink-muted: var(--muted);
-
-    background-color: var(--window);
+    background-color: color-mix(in srgb, var(--window) var(--window-opacity), transparent);
     border: 1px solid var(--gold);
     border-radius: var(--radius-outer);
     padding: var(--frame-gap);
-    color: var(--ink);
+    color: var(--paper);
   }
 
   .window__inner {

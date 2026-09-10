@@ -1,5 +1,5 @@
 ---
-import WorksList from '../../components/WorksList.astro';
+import WorksView from '../../components/WorksView.astro';
 import Base from '../../layouts/Base.astro';
 import { parsePath, useTranslations } from '../../i18n/ui';
 
@@ -8,5 +8,5 @@ const t = useTranslations(locale);
 ---
 
 <Base title={t('works.title')}>
-  <WorksList />
+  <WorksView />
 </Base>

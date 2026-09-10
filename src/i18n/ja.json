@@ -4,8 +4,9 @@
     "description": "TODO: 本文"
   },
   "nav": {
-    "works": "制作",
-    "about": "プロフィール"
+    "home": "トップ",
+    "about": "プロフィール",
+    "works": "作品"
   },
   "lang": {
     "ja": "JA",
@@ -13,10 +14,11 @@
   },
   "home": {
     "tagline": "TODO: 本文",
-    "toWorks": "制作を見る"
+    "toAbout": "プロフィールを見る",
+    "toWorks": "作品を見る"
   },
   "works": {
-    "title": "制作",
+    "title": "作品",
     "solo": "個人",
     "team": "チーム",
     "responsibility": "担当",
@@ -26,7 +28,9 @@
     "linkDemo": "Demo",
     "linkArticle": "記事",
     "japaneseOnly": "Japanese only",
-    "back": "制作一覧へ"
+    "back": "作品一覧へ",
+    "openStandalone": "このページを単独で開く",
+    "close": "とじる"
   },
   "about": {
     "title": "プロフィール",
@@ -42,6 +46,8 @@
     "skipToContent": "本文へスキップ",
     "mainNav": "メインナビゲーション",
     "langSwitch": "言語切替",
-    "externalLinks": "外部リンク"
+    "externalLinks": "外部リンク",
+    "worksList": "作品一覧",
+    "workDetail": "作品の詳細"
   }
 }

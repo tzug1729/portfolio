@@ -21,10 +21,16 @@ const t = useTranslations(locale);
 const pageTitle = title ? `${title} | ${site.name}` : site.name;
 const pageDescription = description ?? t('site.description');
 const canonical = getAbsoluteLocaleUrl(locale, path);
+
+// 背景写真。base パスを付けたうえで、バンドル CSS の既定値に確実に勝つよう
+// <html> のインラインスタイルで渡す
+const backgroundStyle = site.backgroundImage
+  ? `--bg-photo:url("${withBase(site.backgroundImage)}")`
+  : undefined;
 ---
 
 <!doctype html>
-<html lang={htmlLang[locale]}>
+<html lang={htmlLang[locale]} style={backgroundStyle}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
