@@ -5,11 +5,6 @@ order: 2
 
 ## History
 - 2008/06 – Present: Earthling
-- 2015/04 – 2021/03: Ura Elementary School, Awaji City — pupil
-- 2018/04 – 2021/03: Illustration Club — member
-- 2021/04 – 2023/08: Higashiura Junior High School, Awaji City — student
-- 2021/04 – 2023/08: Home Economics Club — member
-- 2023/09 – 2024/03: Setsuyo Junior High School, Osaka City — student
 - 2024/04 – Present: Osaka Metropolitan University College of Technology — student
 - 2024/04 – Present: Programming Club — member
 - 2024/09 – Present: Fast-food burger restaurant — crew
