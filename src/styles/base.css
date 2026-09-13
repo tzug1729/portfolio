@@ -27,29 +27,19 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* 背景写真。background-attachment: fixed は使わず固定レイヤーで敷く */
+/* 背景写真。CSS では加工しない（加工は画像ファイル側で行う）。
+   background-attachment: fixed は使わず固定レイヤーで敷く */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
+  /* 画像未設定のときと読み込み前の下地 */
   background-color: var(--bg-dark);
   background-image: var(--bg-photo);
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  filter: blur(var(--bg-blur)) saturate(var(--bg-saturate));
-  transform: scale(var(--bg-scale));
-  pointer-events: none;
-}
-
-/* 紺のオーバーレイ */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-color: var(--bg-overlay);
   pointer-events: none;
 }
 
@@ -172,7 +162,13 @@ samp {
    ------------------------------------------------------------------ */
 .marker {
   opacity: 0;
+  color: var(--gold-bright);
   transition: opacity 120ms linear;
+}
+
+/* 選ばれている1つ。ナビ・言語切替・作品一覧とも aria-current で示す */
+.marker-group .marker-item[aria-current] .marker {
+  opacity: 1;
 }
 
 /* 触れているものには出す */
@@ -181,15 +177,15 @@ samp {
   opacity: 1;
 }
 
-/* まとまりの中にホバーがあれば、それ以外からは引っ込める */
-.marker-group:has(.marker-item:hover) .marker-item:not(:hover) .marker {
+/* まとまりにポインタが入っている間は、触れている項目以外からは引っ込める。
+   選択中の項目に戻るのは、ポインタがまとまりから完全に離れたときだけ。
+   （項目の隙間で選択中に飛び戻るのを防ぐ） */
+.marker-group:hover .marker-item:not(:hover) .marker {
   opacity: 0;
 }
 
-/* ホバーが無くフォーカスがあるときも同じ。ホバーを優先する */
-.marker-group:not(:has(.marker-item:hover)):has(.marker-item:focus-visible)
-  .marker-item:not(:focus-visible)
-  .marker {
+/* ポインタが外にあり、キーボードフォーカスがあるとき */
+.marker-group:not(:hover):has(.marker-item:focus-visible) .marker-item:not(:focus-visible) .marker {
   opacity: 0;
 }
 

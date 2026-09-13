@@ -269,20 +269,18 @@ const switching = panels
   }
 
   .worksview__items {
-    margin: 0;
+    /* 各項目が上下に padding を持つぶん、外側を引き戻す */
+    margin: -0.55em 0;
     padding: 0;
     list-style: none;
-  }
-
-  .worksview__items li + li {
-    margin-top: 0.5rem;
   }
 
   .worksview__item {
     position: relative;
     display: block;
-    /* ▶ の溝は全項目で確保して行頭を揃える */
-    padding: 0.3em 0.4em 0.3em var(--marker-gutter);
+    /* 上下の余白は margin ではなく padding で持つ。
+       項目同士が隙間なく接するので、間にポインタが落ちない */
+    padding: 0.55em 0.4em 0.55em var(--marker-gutter);
     border-radius: 3px;
     color: var(--paper);
     text-decoration: none;
@@ -292,16 +290,12 @@ const switching = panels
   .worksview__marker {
     position: absolute;
     left: 0.4em;
-    color: var(--gold-bright);
   }
 
-  /* 選択中の1件だけを金にする。ホバーで色は動かさず ▶ だけが移る */
+  /* 選択中の1件だけを金にする。ホバーで色は動かさず ▶ だけが移る。
+     ▶ の出し分けは base.css が aria-current で行う */
   .worksview__item[aria-current] {
     color: var(--gold-bright);
-  }
-
-  .worksview__item[aria-current] .marker {
-    opacity: 1;
   }
 
   .worksview__period {

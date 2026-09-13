@@ -13,7 +13,7 @@
  */
 interface Props {
   href: string;
-  /** 現在地。地色に --accent-red を使うのはここだけ */
+  /** 現在地。▶ と金の文字色だけで示す */
   current?: boolean;
   external?: boolean;
   class?: string;
@@ -38,25 +38,17 @@ const { href, current = false, external = false, class: className } = Astro.prop
     display: inline-block;
     /* 左は ▶ の溝ぶん空ける。まとまり側は同じ量を打ち消して行頭を揃える */
     padding: 0.1em 0.5em 0.1em var(--marker-gutter);
-    border-radius: 3px;
     color: var(--paper);
     text-decoration: none;
-    transition: background-color 120ms linear;
   }
 
   .navlink__marker {
     position: absolute;
     left: 0.4em;
+  }
+
+  /* 現在地は ▶（base.css が aria-current で出す）と文字色だけで示す */
+  .navlink--current .navlink__label {
     color: var(--gold-bright);
-  }
-
-  /* 現在地。▶ も出す */
-  .navlink--current {
-    background-color: var(--accent-red);
-  }
-
-  .navlink--current .marker {
-    opacity: 1;
-    color: var(--paper);
   }
 </style>

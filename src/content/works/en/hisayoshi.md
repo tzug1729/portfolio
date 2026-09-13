@@ -6,7 +6,7 @@ role: team
 responsibility: "Project manager and programmer"
 tech: ["Python", "pygame"]
 links:
-  github: "https://github.com/tzug1729/2025_2I_kosen-fes"
+  github: "https://github.com/tzug1729/hisayoshi"
 order: 1
 ---
 

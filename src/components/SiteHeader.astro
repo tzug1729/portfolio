@@ -50,10 +50,11 @@ const items = [
     letter-spacing: 0.12em;
   }
 
+  /* gap を空けると項目の隙間にポインタが落ちて ▶ が消えるので、
+     間隔は各リンクの padding に持たせて隙間なく並べる */
   .site-header__nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.15rem;
     font-size: var(--fs-small);
   }
 

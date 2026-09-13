@@ -33,7 +33,6 @@ const t = useTranslations(locale);
   .lang {
     display: inline-flex;
     align-items: baseline;
-    gap: 0.15em;
     font-size: var(--fs-small);
     letter-spacing: 0.06em;
   }
@@ -52,16 +51,8 @@ const t = useTranslations(locale);
     transition: color 120ms linear;
   }
 
-  .lang__marker {
-    color: var(--gold-bright);
-  }
-
-  /* 現在の言語は地色ではなく文字色で示す。▶ もここに出る */
+  /* 現在の言語は文字色で示す。▶ は base.css が aria-current で出す */
   .lang__link--current {
     color: var(--gold-bright);
-  }
-
-  .lang__link--current .marker {
-    opacity: 1;
   }
 </style>
