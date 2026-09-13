@@ -21,6 +21,9 @@ I had originally built the site with a plain HTML, CSS, and JavaScript setup, bu
 I used Claude Code for the migration to Astro.
 At the same time I changed how the content is written, from putting everything into config.js to writing Markdown and building it.
 
+The background image of this portfolio is a photograph of the National College of Technology that has undergone image processing.
+It was converted to grayscale after applying adaptive binarization.
+
 ## Where I got stuck
 
 Before the Astro migration: I had trouble with the loop logic for the certifications carousel and with laying out content inside modals. When I added i18n, Japanese kept slipping through, and making the site fully English took real effort.

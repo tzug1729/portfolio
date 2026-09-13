@@ -9,4 +9,4 @@ Thumbs.db
 .vscode/
 .claude/
 kosen-fes/
-
+src/opencv/.venv
