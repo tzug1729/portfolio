@@ -11,7 +11,8 @@ order: 3
 - 2026/01: Fundamental Information Technology Engineer Examination — passed
 - 2026/01: JDLA Deep Learning for GENERAL 2026 #1 — passed
 - 2026/07: TOEIC Listening & Reading IP Test — 535
-- 2026/09: "Physical AI: Fundamentals," Matsuo-Iwasawa Laboratory, The University of Tokyo — completed
+- 2026/09: "Physical AI: Fundamentals", Matsuo-Iwasawa Laboratory, The University of Tokyo — completed
+- 2026/09: "Chair for Global Consumer Intelligence", Matsuo-Iwasawa Laboratory, The University of Tokyo — Advanced completed
 
 ## Awards
 - 2025/08: Science Festa 2025 — Excellence Award
