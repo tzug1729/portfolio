@@ -4,13 +4,6 @@
 export const site = {
   name: 'tzug',
 
-  /**
-   * 全面に敷く背景写真。public/ 配下は「サイトのルート直下」に出るので、
-   * ここに書くのはファイル名だけ（'background.jpg'）。
-   * 'public/...' や '../public/...' と書くと存在しない URL になる。
-   * null なら --bg-dark 一色。ぼかし・彩度・オーバーレイの強さは
-   * src/styles/tokens.css の --bg-* で調整する。
-   */
   backgroundImage: 'background.jpg',
 
   /** フッターの外部リンク */
