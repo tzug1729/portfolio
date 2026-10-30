@@ -17,3 +17,5 @@ order: 3
 
 ## Awards
 - 2025/08: Science Festa 2025 — Excellence Award
+- 2026/10：Programming Contest 2026　Fighting Spirit Award
+- 2026/10：Deep Learning Contest 2027　Qualifing
