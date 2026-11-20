@@ -7,7 +7,7 @@ tech: ["TypeScript", "React", "Tailwind CSS", "Vitest", "React Testing Library"]
 links:
   github: "https://github.com/tzug1729/todo"
   demo: "https://tzug1729.github.io/todo/"
-order: 7
+order: 8
 ---
 
 ## なぜ作ったか
