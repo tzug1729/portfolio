@@ -14,6 +14,9 @@ order: 3
 - 2026/09: "Physical AI: Fundamentals", Matsuo-Iwasawa Laboratory, The University of Tokyo — completed
 - 2026/09: "Chair for Global Consumer Intelligence", Matsuo-Iwasawa Laboratory, The University of Tokyo — Advanced completed
 - 2026/10："Kosen AI Practical Bootcamp", Matsuo Institute, Inc.  — completed
+- 
+- 2026/10: "Hands-on Physical AI Workshop Using Robot Arms and Mobile Robots," organized by Osaka Prefecture and the Robot Innovation Lab Osaka Joint Venture.  — attended
+
 
 ## Awards
 - 2025/08: Science Festa 2025 — Excellence Award
